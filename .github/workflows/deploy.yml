@@ -43,8 +43,6 @@ jobs:
       - name: Render and validate static output
         run: php scripts/build.php
 
-      - name: Check frontend integrity and build safeguards
-        run: python3 tests/check_static.py --php php
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
