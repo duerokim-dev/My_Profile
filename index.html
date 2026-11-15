@@ -1,199 +1,11 @@
-<?php
-declare(strict_types=1);
-
-
-$profile = [
-    'name' => 'Kimberly Duero',
-    'initials' => 'KD',
-    'first_name' => 'Kimberly',
-    'role' => 'Aspiring UI/UX Designer',
-    'alternate_role' => 'Future Data Analytics Specialist',
-    'course' => 'Bachelor of Science in Information Technology',
-    'school' => 'Mater Dei College',
-    'intro' => 'Exploring the space where thoughtful design meets meaningful data. I’m an IT student shaping a future in UI/UX design and data analytics.',
-    'bio' => 'I’m Kimberly, an Information Technology student at Mater Dei College. I’m drawn to the way design and data can work together: one helps us understand people, the other helps us ask better questions.',
-    'aspiration' => 'My goal is to grow into a UI/UX designer and data analytics specialist, creating digital experiences that feel intuitive and turning information into something useful.',
-    'photo' => 'profile.jpg',
-    'email' => 'carlynkate1@gmail.com',
-    'phone' => '09507653822',
-    'phone_uri' => '+639507653822',
-    'location' => '',
-    'facebook_name' => 'Kimberly Duero',
-    'facebook_url' => 'https://www.facebook.com/kimberly.duero.2025/', 
-    'github' => '',
-    'linkedin' => '',
-];
-
-$education = [
-    [
-        'school' => 'Mater Dei College',
-        'degree' => 'Bachelor of Science in Information Technology',
-        'years' => '', 
-        'label' => 'Academic journey',
-        'description' => 'Building an IT foundation while exploring a path in design and data analytics.',
-        'coursework' => [], 
-    ],
-];
-
-
-$skills = [
-    [
-        'number' => '01', 'title' => 'Design', 'icon' => 'pen',
-        'subtitle' => 'A thoughtful visual perspective',
-        'description' => 'An interest in shaping clear, considered digital experiences, with UI/UX design as a future direction.',
-        'items' => ['Design'], 'focus' => 'UI/UX design',
-    ],
-    [
-        'number' => '02', 'title' => 'Data Analytics', 'icon' => 'chart',
-        'subtitle' => 'Curiosity behind the numbers',
-        'description' => 'An interest in finding patterns, asking useful questions, and making information easier to understand.',
-        'items' => ['Data Analytics'], 'focus' => 'Data analytics specialist',
-    ],
-];
-
-$hobbies = [
-    [
-        'title' => 'UI/UX Design', 'icon' => 'layout', 'label' => 'The human side of technology',
-        'description' => 'Exploring how thoughtful layouts and interactions can make everyday digital experiences feel more intuitive.',
-    ],
-    [
-        'title' => 'Data Exploration', 'icon' => 'spark', 'label' => 'The story inside the data',
-        'description' => 'Following a curiosity for patterns and insights, with the goal of becoming a data analytics specialist.',
-    ],
-];
-
-$strengths = [
-    ['icon' => 'pen', 'title' => 'A design perspective', 'text' => 'Interested in the details that make an experience clear and approachable.'],
-    ['icon' => 'chart', 'title' => 'An analytical curiosity', 'text' => 'Drawn to the questions and patterns behind the information.'],
-    ['icon' => 'book', 'title' => 'A learning mindset', 'text' => 'Building a foundation for a future at the intersection of design and data.'],
-];
-
-$navigation = ['home' => 'Home', 'about' => 'About Me', 'education' => 'Education', 'skills' => 'Skills', 'interests' => 'Interests', 'contact' => 'Contact'];
-
-
-$mailConfig = ['enabled' => false, 'from' => '', 'to' => $profile['email']];
-$currentYear = date('Y');
-
-function e(string $value): string
-{
-    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-}
-
-function safeUrl(string $url): string
-{
-    $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
-    return in_array($scheme, ['https', 'http'], true) && filter_var($url, FILTER_VALIDATE_URL) ? $url : '';
-}
-
-function icon(string $name, string $class = ''): string
-{
-    $paths = [
-        'arrow' => '<path d="M7 17 17 7M7 7h10v10"/>',
-        'right' => '<path d="M4 12h16m-6-6 6 6-6 6"/>',
-        'down' => '<path d="M12 4v16m-6-6 6 6 6-6"/>',
-        'up' => '<path d="M12 20V4m-6 6 6-6 6 6"/>',
-        'mail' => '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 7 9 6 9-6"/>',
-        'phone' => '<path d="m7 3 3 5-3 3a15 15 0 0 0 6 6l3-3 5 3c-1 5-5 5-10 2S3 10 3 6c0-2 2-3 4-3Z"/>',
-        'pin' => '<path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
-        'pen' => '<path d="m14 4 6 6-8 8-8 2 2-8 8-8Z"/><path d="m12 6 6 6M4 20l5-5"/><circle cx="10" cy="14" r="1"/>',
-        'chart' => '<path d="M4 4v16h16M8 15v-4m5 4V7m5 8v-6"/>',
-        'book' => '<path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v14"/>',
-        'cap' => '<path d="m2 9 10-5 10 5-10 5-10-5Zm4 2v6c4 3 8 3 12 0v-6m4-2v8"/>',
-        'layout' => '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 9v12"/>',
-        'spark' => '<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/>',
-        'check' => '<path d="m5 12 4 4L19 6"/>',
-        'facebook' => '<path d="M14 21v-8h3l.5-4H14V7c0-1 .5-2 2-2h2V2h-3c-3 0-5 2-5 5v2H7v4h3v8"/>',
-        'globe' => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-5 5-5 13 0 18 5-5 5-13 0-18Z"/>',
-    ];
-    return '<svg class="icon ' . e($class) . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . ($paths[$name] ?? $paths['spark']) . '</svg>';
-}
-
-
-ini_set('session.use_strict_mode', '1');
-session_set_cookie_params([
-    'httponly' => true,
-    'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-    'samesite' => 'Lax',
-]);
-session_start();
-header('X-Content-Type-Options: nosniff');
-header('Referrer-Policy: strict-origin-when-cross-origin');
-header('Cache-Control: no-store');
-if (empty($_SESSION['csrf'])) {
-    $_SESSION['csrf'] = bin2hex(random_bytes(32));
-}
-
-$fields = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
-$errors = [];
-$formStatus = '';
-$formSuccess = false;
-$deliveryAvailable = $mailConfig['enabled'] && function_exists('mail')
-    && filter_var($mailConfig['from'], FILTER_VALIDATE_EMAIL)
-    && filter_var($mailConfig['to'], FILTER_VALIDATE_EMAIL)
-    && !preg_match('/[\r\n]/', $mailConfig['from'] . $mailConfig['to']);
-
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
-    foreach ($fields as $key => $unused) {
-        $fields[$key] = isset($_POST[$key]) && is_string($_POST[$key]) ? trim($_POST[$key]) : '';
-    }
-    $token = isset($_POST['csrf']) && is_string($_POST['csrf']) ? $_POST['csrf'] : '';
-    if (!hash_equals($_SESSION['csrf'], $token)) {
-        $formStatus = 'Your session could not be verified. Refresh the page and try again.';
-    } elseif (!empty($_POST['website'])) {
-        $formStatus = 'Your message could not be submitted. Please contact me by email.';
-    } else {
-        if (strlen($fields['name']) < 2 || strlen($fields['name']) > 100 || preg_match('/[\r\n]/', $fields['name'])) {
-            $errors['name'] = 'Enter a name between 2 and 100 characters.';
-        }
-        if (strlen($fields['email']) > 254 || !filter_var($fields['email'], FILTER_VALIDATE_EMAIL) || preg_match('/[\r\n]/', $fields['email'])) {
-            $errors['email'] = 'Enter a valid email address.';
-        }
-        if (strlen($fields['subject']) < 2 || strlen($fields['subject']) > 150 || preg_match('/[\r\n]/', $fields['subject'])) {
-            $errors['subject'] = 'Enter a subject between 2 and 150 characters.';
-        }
-        if (strlen($fields['message']) < 10 || strlen($fields['message']) > 5000) {
-            $errors['message'] = 'Enter a message between 10 and 5,000 characters.';
-        }
-        if ($errors) {
-            $formStatus = 'Please check the highlighted fields and try again.';
-        } elseif (!$deliveryAvailable) {
-            $formStatus = 'This form is not connected to a mail service yet. Your message has not been sent. Please use the email link to get in touch.';
-        } elseif (isset($_SESSION['last_sent']) && time() - $_SESSION['last_sent'] < 60) {
-            $formStatus = 'Please wait a minute before sending another message.';
-        } else {
-            $body = "Portfolio enquiry\n\nName: " . $fields['name'] . "\nEmail: " . $fields['email'] . "\nSubject: " . $fields['subject'] . "\n\n" . $fields['message'];
-            $headers = [
-                'From' => $mailConfig['from'],
-                'Reply-To' => $fields['email'],
-                'Content-Type' => 'text/plain; charset=UTF-8',
-                'MIME-Version' => '1.0',
-            ];
-
-            if (@mail($mailConfig['to'], 'Portfolio enquiry', $body, $headers)) {
-                $_SESSION['last_sent'] = time();
-                $_SESSION['csrf'] = bin2hex(random_bytes(32));
-                $_SESSION['contact_success'] = 'Thank you! Your message was accepted by the mail service for delivery.';
-                header('Location: ./index.php?sent=1#contact', true, 303);
-                exit;
-            }
-            $formStatus = 'The mail service could not accept your message. Please use the email link instead.';
-        }
-    }
-}
-if (isset($_SESSION['contact_success'])) {
-    $formStatus = $_SESSION['contact_success'];
-    $formSuccess = true;
-    unset($_SESSION['contact_success']);
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#080B12">
-    <meta name="description" content="<?= e($profile['name']) ?> — IT student at <?= e($profile['school']) ?>, exploring UI/UX design and data analytics. Get to know my interests, education, and skills.">
-    <title><?= e($profile['name']) ?> — Design, Data &amp; Possibility</title>
+    <meta name="description" content="Kimberly Duero — IT student at Mater Dei College, exploring UI/UX design and data analytics. Get to know my interests, education, and skills.">
+    <title>Kimberly Duero — Design, Data &amp; Possibility</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23080B12'/%3E%3Ctext x='32' y='41' font-family='Arial' font-size='27' font-weight='bold' text-anchor='middle' fill='%2300D4FF'%3EKD%3C/text%3E%3C/svg%3E">
     <style>
         /* FOUNDATION */
@@ -237,16 +49,19 @@ if (isset($_SESSION['contact_success'])) {
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="header" id="header">
         <div class="container header-inner">
-            <a class="brand" href="#home" aria-label="<?= e($profile['name']) ?> — home">
-                <span class="logo"><?= e($profile['initials']) ?><span>.</span></span>
+            <a class="brand" href="#home" aria-label="Kimberly Duero — home">
+                <span class="logo">KD<span>.</span></span>
                 <span class="brand-caption">A personal<br>perspective</span>
             </a>
             <nav class="nav" id="primary-nav" aria-label="Main navigation">
-                <?php foreach ($navigation as $id => $label): ?>
-                    <a href="#<?= e($id) ?>"<?= $id === 'home' ? ' class="active" aria-current="location"' : '' ?>><?= e($label) ?></a>
-                <?php endforeach; ?>
-            </nav>
-            <a class="button header-cta" href="#contact">Let’s Connect <?= icon('arrow') ?></a>
+                                    <a href="#home" class="active" aria-current="location">Home</a>
+                                    <a href="#about">About Me</a>
+                                    <a href="#education">Education</a>
+                                    <a href="#skills">Skills</a>
+                                    <a href="#interests">Interests</a>
+                                    <a href="#contact">Contact</a>
+                            </nav>
+            <a class="button header-cta" href="#contact">Let’s Connect <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
             <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span></button>
         </div>
     </header>
@@ -258,28 +73,28 @@ if (isset($_SESSION['contact_success'])) {
                 <div class="hero-copy reveal">
                     <div class="student-badge"><span class="status-dot" aria-hidden="true"></span> IT STUDENT &amp; CREATIVE THINKER</div>
                     <p class="hero-intro">Hello, I’m</p>
-                    <h1 id="hero-title"><?= e($profile['first_name']) ?><span><?= e(substr($profile['name'], strlen($profile['first_name']) + 1)) ?>.</span></h1>
-                    <div class="role-line"><span class="role-text" data-roles="<?= e(json_encode([$profile['role'], $profile['alternate_role']], JSON_UNESCAPED_UNICODE)) ?>"><?= e($profile['role']) ?></span><span class="role-cursor" aria-hidden="true">|</span></div>
-                    <p class="hero-description"><?= e($profile['intro']) ?></p>
+                    <h1 id="hero-title">Kimberly<span>Duero.</span></h1>
+                    <div class="role-line"><span class="role-text" data-roles="[&quot;Aspiring UI\/UX Designer&quot;,&quot;Future Data Analytics Specialist&quot;]">Aspiring UI/UX Designer</span><span class="role-cursor" aria-hidden="true">|</span></div>
+                    <p class="hero-description">Exploring the space where thoughtful design meets meaningful data. I’m an IT student shaping a future in UI/UX design and data analytics.</p>
                     <div class="hero-actions">
-                        <a href="#about" class="button button-primary">Explore My Profile <?= icon('right') ?></a>
-                        <a href="#contact" class="button button-secondary"><?= icon('mail') ?> Contact Me</a>
+                        <a href="#about" class="button button-primary">Explore My Profile <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a>
+                        <a href="#contact" class="button button-secondary"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 7 9 6 9-6"/></svg> Contact Me</a>
                     </div>
-                    <div class="hero-note"><?= icon('cap') ?><span><?= e($profile['school']) ?></span><span>Information Technology</span></div>
+                    <div class="hero-note"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5-10-5Zm4 2v6c4 3 8 3 12 0v-6m4-2v8"/></svg><span>Mater Dei College</span><span>Information Technology</span></div>
                 </div>
                 <div class="portrait-stage reveal">
                     <span class="orbital-mark" aria-hidden="true">+</span>
                     <div class="portrait-frame">
-                        <img src="<?= e($profile['photo']) ?>" alt="<?= e($profile['name']) ?> smiling in a swimming pool" width="1242" height="2208" fetchpriority="high" decoding="async">
-                        <div class="photo-caption"><div><small>Beyond the screen</small><strong>A little more me.</strong></div><?= icon('spark') ?></div>
+                        <img src="profile.jpg" alt="Kimberly Duero smiling in a swimming pool" width="1242" height="2208" fetchpriority="high" decoding="async">
+                        <div class="photo-caption"><div><small>Beyond the screen</small><strong>A little more me.</strong></div><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/></svg></div>
                     </div>
-                    <div class="floating-note note-design" aria-hidden="true"><?= icon('pen') ?><div><strong>Design with intention.</strong><small>People at the center</small></div></div>
-                    <div class="floating-note note-data" aria-hidden="true"><?= icon('chart') ?><div><strong>Curious by nature.</strong><small>Inspired by data</small></div></div>
+                    <div class="floating-note note-design" aria-hidden="true"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 4 6 6-8 8-8 2 2-8 8-8Z"/><path d="m12 6 6 6M4 20l5-5"/><circle cx="10" cy="14" r="1"/></svg><div><strong>Design with intention.</strong><small>People at the center</small></div></div>
+                    <div class="floating-note note-data" aria-hidden="true"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16M8 15v-4m5 4V7m5 8v-6"/></svg><div><strong>Curious by nature.</strong><small>Inspired by data</small></div></div>
                     <span class="portrait-label" aria-hidden="true">DESIGN · DATA · POSSIBILITY</span>
                 </div>
             </div>
             <div class="hero-bottom">
-                <a href="#about" class="scroll-prompt"><?= icon('down') ?> Scroll to get to know me</a>
+                <a href="#about" class="scroll-prompt"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg> Scroll to get to know me</a>
                 <div class="coordinates"><span>Thoughtful design.</span> Meaningful insights.</div>
             </div>
         </section>
@@ -289,29 +104,26 @@ if (isset($_SESSION['contact_success'])) {
             <div class="container">
                 <div class="about-grid">
                     <div class="about-copy reveal"><div class="eyebrow">01 / About me</div><h2 class="section-heading" id="about-title">A creative eye.<br><span class="muted-heading">A curious mind.</span></h2></div>
-                    <div class="about-text reveal"><p><?= e($profile['bio']) ?></p><p><?= e($profile['aspiration']) ?></p><div class="about-signature"><span class="signature"><?= e($profile['first_name']) ?></span><span class="signature-label">Learning with purpose.<br>Creating with care.</span></div></div>
+                    <div class="about-text reveal"><p>I’m Kimberly, an Information Technology student at Mater Dei College. I’m drawn to the way design and data can work together: one helps us understand people, the other helps us ask better questions.</p><p>My goal is to grow into a UI/UX designer and data analytics specialist, creating digital experiences that feel intuitive and turning information into something useful.</p><div class="about-signature"><span class="signature">Kimberly</span><span class="signature-label">Learning with purpose.<br>Creating with care.</span></div></div>
                 </div>
                 <div class="strength-grid">
-                    <?php foreach ($strengths as $strength): ?>
-                        <article class="strength-card reveal"><div class="icon-box"><?= icon($strength['icon']) ?></div><h3><?= e($strength['title']) ?></h3><p><?= e($strength['text']) ?></p></article>
-                    <?php endforeach; ?>
-                </div>
+                                            <article class="strength-card reveal"><div class="icon-box"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 4 6 6-8 8-8 2 2-8 8-8Z"/><path d="m12 6 6 6M4 20l5-5"/><circle cx="10" cy="14" r="1"/></svg></div><h3>A design perspective</h3><p>Interested in the details that make an experience clear and approachable.</p></article>
+                                            <article class="strength-card reveal"><div class="icon-box"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16M8 15v-4m5 4V7m5 8v-6"/></svg></div><h3>An analytical curiosity</h3><p>Drawn to the questions and patterns behind the information.</p></article>
+                                            <article class="strength-card reveal"><div class="icon-box"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v14"/></svg></div><h3>A learning mindset</h3><p>Building a foundation for a future at the intersection of design and data.</p></article>
+                                    </div>
             </div>
         </section>
 
         <!-- 03 / EDUCATION -->
         <section class="section education-section section-divider" id="education" aria-labelledby="education-title">
             <div class="container education-grid">
-                <div class="education-intro reveal"><div class="eyebrow">02 / Education</div><h2 class="section-heading" id="education-title">Where curiosity<br><span class="muted-heading">finds direction.</span></h2><p>Every next step starts with a foundation. Here’s the academic path behind my growing interest in technology.</p><div class="education-footnote"><?= icon('book') ?> A foundation for what comes next</div></div>
+                <div class="education-intro reveal"><div class="eyebrow">02 / Education</div><h2 class="section-heading" id="education-title">Where curiosity<br><span class="muted-heading">finds direction.</span></h2><p>Every next step starts with a foundation. Here’s the academic path behind my growing interest in technology.</p><div class="education-footnote"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v14"/></svg> A foundation for what comes next</div></div>
                 <div class="timeline">
-                    <?php foreach ($education as $entry): ?>
-                        <article class="education-card reveal">
-                            <div class="education-meta"><span class="academic-label"><?= e($entry['label']) ?></span><?php if ($entry['years'] !== ''): ?><time><?= e($entry['years']) ?></time><?php endif; ?></div>
-                            <?= icon('cap') ?><h3><?= e($entry['school']) ?></h3><p class="degree"><?= e($entry['degree']) ?></p><p class="description"><?= e($entry['description']) ?></p>
-                            <?php if ($entry['coursework']): ?><ul class="coursework"><?php foreach ($entry['coursework'] as $course): ?><li><?= e($course) ?></li><?php endforeach; ?></ul><?php endif; ?>
-                        </article>
-                    <?php endforeach; ?>
-                </div>
+                                            <article class="education-card reveal">
+                            <div class="education-meta"><span class="academic-label">Academic journey</span></div>
+                            <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5-10-5Zm4 2v6c4 3 8 3 12 0v-6m4-2v8"/></svg><h3>Mater Dei College</h3><p class="degree">Bachelor of Science in Information Technology</p><p class="description">Building an IT foundation while exploring a path in design and data analytics.</p>
+                                                    </article>
+                                    </div>
             </div>
         </section>
 
@@ -320,15 +132,19 @@ if (isset($_SESSION['contact_success'])) {
             <div class="container">
                 <div class="section-top reveal"><div><div class="eyebrow">03 / Skills &amp; focus</div><h2 class="section-heading" id="skills-title">Two perspectives.<br><span class="muted-heading">One thoughtful approach.</span></h2></div><p class="section-lead">Bringing a visual perspective and an analytical curiosity to the way I explore technology.</p></div>
                 <div class="skills-grid">
-                    <?php foreach ($skills as $skill): ?>
-                        <article class="skill-card reveal">
-                            <div class="skill-card-top"><div class="icon-box"><?= icon($skill['icon']) ?></div><span class="skill-number">/ <?= e($skill['number']) ?></span></div>
-                            <h3><?= e($skill['title']) ?></h3><p class="skill-subtitle"><?= e($skill['subtitle']) ?></p><p class="skill-description"><?= e($skill['description']) ?></p>
-                            <div class="skill-chips"><?php foreach ($skill['items'] as $item): ?><span class="skill-chip"><?= e($item) ?></span><?php endforeach; ?></div>
-                            <div class="skill-focus"><?= icon('arrow') ?><span>Growing toward <strong><?= e($skill['focus']) ?></strong></span></div>
+                                            <article class="skill-card reveal">
+                            <div class="skill-card-top"><div class="icon-box"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 4 6 6-8 8-8 2 2-8 8-8Z"/><path d="m12 6 6 6M4 20l5-5"/><circle cx="10" cy="14" r="1"/></svg></div><span class="skill-number">/ 01</span></div>
+                            <h3>Design</h3><p class="skill-subtitle">A thoughtful visual perspective</p><p class="skill-description">An interest in shaping clear, considered digital experiences, with UI/UX design as a future direction.</p>
+                            <div class="skill-chips"><span class="skill-chip">Design</span></div>
+                            <div class="skill-focus"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg><span>Growing toward <strong>UI/UX design</strong></span></div>
                         </article>
-                    <?php endforeach; ?>
-                </div>
+                                            <article class="skill-card reveal">
+                            <div class="skill-card-top"><div class="icon-box"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16M8 15v-4m5 4V7m5 8v-6"/></svg></div><span class="skill-number">/ 02</span></div>
+                            <h3>Data Analytics</h3><p class="skill-subtitle">Curiosity behind the numbers</p><p class="skill-description">An interest in finding patterns, asking useful questions, and making information easier to understand.</p>
+                            <div class="skill-chips"><span class="skill-chip">Data Analytics</span></div>
+                            <div class="skill-focus"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg><span>Growing toward <strong>Data analytics specialist</strong></span></div>
+                        </article>
+                                    </div>
                 <p class="skills-note">A growing skill set, guided by curiosity and continuous learning.</p>
             </div>
         </section>
@@ -338,10 +154,9 @@ if (isset($_SESSION['contact_success'])) {
             <div class="container section-divider">
                 <div class="section-top reveal"><div><div class="eyebrow">04 / Hobbies &amp; interests</div><h2 class="section-heading" id="interests-title">What keeps me curious.</h2></div><p class="section-lead">The ideas I’m drawn to, and the directions I want to explore further.</p></div>
                 <div class="interests-grid">
-                    <?php foreach ($hobbies as $hobby): ?>
-                        <article class="interest-card reveal"><div class="interest-head"><?= icon($hobby['icon']) ?><span class="interest-tag"><?= e($hobby['label']) ?></span></div><h3><?= e($hobby['title']) ?></h3><p><?= e($hobby['description']) ?></p><div class="interest-art" aria-hidden="true"><?= icon($hobby['icon']) ?></div></article>
-                    <?php endforeach; ?>
-                </div>
+                                            <article class="interest-card reveal"><div class="interest-head"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 9v12"/></svg><span class="interest-tag">The human side of technology</span></div><h3>UI/UX Design</h3><p>Exploring how thoughtful layouts and interactions can make everyday digital experiences feel more intuitive.</p><div class="interest-art" aria-hidden="true"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 9v12"/></svg></div></article>
+                                            <article class="interest-card reveal"><div class="interest-head"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/></svg><span class="interest-tag">The story inside the data</span></div><h3>Data Exploration</h3><p>Following a curiosity for patterns and insights, with the goal of becoming a data analytics specialist.</p><div class="interest-art" aria-hidden="true"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/></svg></div></article>
+                                    </div>
             </div>
         </section>
 
@@ -351,28 +166,22 @@ if (isset($_SESSION['contact_success'])) {
                 <div class="contact-copy reveal">
                     <div class="eyebrow">05 / Let’s connect</div><h2 class="section-heading" id="contact-title">Have an opportunity<br>in mind?<br><em>Let’s talk.</em></h2><p>For an internship, a creative collaboration, or a conversation about design and data — I’d love to hear from you.</p>
                     <div class="contact-options">
-                        <?php if ($profile['email'] !== ''): ?><div class="contact-item"><?= icon('mail') ?><div><small>Email me</small><a href="mailto:<?= e($profile['email']) ?>"><?= e($profile['email']) ?></a></div></div><?php endif; ?>
-                        <?php if ($profile['phone'] !== ''): ?><div class="contact-item"><?= icon('phone') ?><div><small>Call or text</small><a href="tel:<?= e($profile['phone_uri']) ?>"><?= e($profile['phone']) ?></a></div></div><?php endif; ?>
-                        <?php if ($profile['location'] !== ''): ?><div class="contact-item"><?= icon('pin') ?><div><small>Based in</small><span class="contact-value"><?= e($profile['location']) ?></span></div></div><?php endif; ?>
-                        <?php if ($profile['facebook_name'] !== ''): ?><div class="contact-item"><?= icon('facebook') ?><div><small>Find me on Facebook</small><?php if (safeUrl($profile['facebook_url'])): ?><a href="<?= e(safeUrl($profile['facebook_url'])) ?>" target="_blank" rel="noopener noreferrer"><?= e($profile['facebook_name']) ?> <?= icon('arrow') ?></a><?php else: ?><span class="contact-value"><?= e($profile['facebook_name']) ?></span><?php endif; ?></div></div><?php endif; ?>
-                    </div>
-                    <div class="social-links"><?php foreach (['github' => 'GitHub', 'linkedin' => 'LinkedIn'] as $key => $label): ?><?php if (safeUrl($profile[$key])): ?><a href="<?= e(safeUrl($profile[$key])) ?>" target="_blank" rel="noopener noreferrer"><?= icon('globe') ?> <?= e($label) ?> <?= icon('arrow') ?></a><?php endif; ?><?php endforeach; ?></div>
-                    <a class="text-link direct-email" href="mailto:<?= e($profile['email']) ?>">Prefer email? Say hello directly <?= icon('arrow') ?></a>
+                        <div class="contact-item"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 7 9 6 9-6"/></svg><div><small>Email me</small><a href="mailto:carlynkate1@gmail.com">carlynkate1@gmail.com</a></div></div>                        <div class="contact-item"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 3 3 5-3 3a15 15 0 0 0 6 6l3-3 5 3c-1 5-5 5-10 2S3 10 3 6c0-2 2-3 4-3Z"/></svg><div><small>Call or text</small><a href="tel:+639507653822">09507653822</a></div></div>                                                <div class="contact-item"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1 .5-2 2-2h2V2h-3c-3 0-5 2-5 5v2H7v4h3v8"/></svg><div><small>Find me on Facebook</small><a href="https://www.facebook.com/kimberly.duero.2025/" target="_blank" rel="noopener noreferrer">Kimberly Duero <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>                    </div>
+                    <div class="social-links"></div>
+                    <a class="text-link direct-email" href="mailto:carlynkate1@gmail.com">Prefer email? Say hello directly <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
                 </div>
-                <form class="contact-form reveal" id="contact-form" method="post" action="./index.php#contact">
-                    <div class="form-heading"><?= icon('mail') ?><h3>Send a little hello.</h3></div>
-                    <p class="form-note" id="delivery-note"><?php if ($deliveryAvailable): ?>Have something in mind? Leave a message below. All fields are required.<?php else: ?>Form delivery is currently unavailable. Please <a href="mailto:<?= e($profile['email']) ?>">email me directly</a>. You can still check your message below.<?php endif; ?></p>
-                    <?php if ($formStatus !== ''): ?><div class="form-status<?= $formSuccess ? ' success' : '' ?>" id="form-status" role="<?= $formSuccess ? 'status' : 'alert' ?>" tabindex="-1"><?= e($formStatus) ?></div><?php endif; ?>
-                    <input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>">
-                    <div class="hp-field" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+                <form class="contact-form reveal" id="contact-form" method="post" action="mailto:carlynkate1@gmail.com" enctype="text/plain">
+                    <div class="form-heading"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 7 9 6 9-6"/></svg><h3>Send a little hello.</h3></div>
+                    <p class="form-note" id="delivery-note">Check your message below, then open a draft in your email app. You can also <a href="mailto:carlynkate1@gmail.com">email me directly</a>. All fields are required.</p>
                     <div class="form-grid">
-                        <div class="form-field"><label for="name">Full name <span>(required)</span></label><input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required minlength="2" maxlength="100" value="<?= e($fields['name']) ?>"<?= isset($errors['name']) ? ' aria-invalid="true" aria-describedby="error-name"' : '' ?>><?php if (isset($errors['name'])): ?><span class="field-error" id="error-name"><?= e($errors['name']) ?></span><?php endif; ?></div>
-                        <div class="form-field"><label for="email">Email address <span>(required)</span></label><input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required maxlength="254" value="<?= e($fields['email']) ?>"<?= isset($errors['email']) ? ' aria-invalid="true" aria-describedby="error-email"' : '' ?>><?php if (isset($errors['email'])): ?><span class="field-error" id="error-email"><?= e($errors['email']) ?></span><?php endif; ?></div>
-                        <div class="form-field full"><label for="subject">Subject <span>(required)</span></label><input id="subject" name="subject" type="text" placeholder="What’s on your mind?" required minlength="2" maxlength="150" value="<?= e($fields['subject']) ?>"<?= isset($errors['subject']) ? ' aria-invalid="true" aria-describedby="error-subject"' : '' ?>><?php if (isset($errors['subject'])): ?><span class="field-error" id="error-subject"><?= e($errors['subject']) ?></span><?php endif; ?></div>
-                        <div class="form-field full"><label for="message">Your message <span>(required)</span></label><textarea id="message" name="message" rows="4" placeholder="Tell me a little about your idea or opportunity…" required minlength="10" maxlength="5000"<?= isset($errors['message']) ? ' aria-invalid="true" aria-describedby="error-message"' : '' ?>><?= e($fields['message']) ?></textarea><?php if (isset($errors['message'])): ?><span class="field-error" id="error-message"><?= e($errors['message']) ?></span><?php endif; ?></div>
+                        <div class="form-field"><label for="name">Full name <span>(required)</span></label><input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required minlength="2" maxlength="100" value=""></div>
+                        <div class="form-field"><label for="email">Email address <span>(required)</span></label><input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required maxlength="254" value=""></div>
+                        <div class="form-field full"><label for="subject">Subject <span>(required)</span></label><input id="subject" name="subject" type="text" placeholder="What’s on your mind?" required minlength="2" maxlength="150" value=""></div>
+                        <div class="form-field full"><label for="message">Your message <span>(required)</span></label><textarea id="message" name="message" rows="4" placeholder="Tell me a little about your idea or opportunity…" required minlength="10" maxlength="5000"></textarea></div>
                     </div>
-                    <button type="submit" class="button button-primary form-submit" aria-describedby="delivery-note"><span><?= $deliveryAvailable ? 'Send Message' : 'Check Message' ?></span><?= icon('arrow') ?></button>
-                    <p class="form-privacy"><?= $deliveryAvailable ? 'Your details are used only to respond to your enquiry.' : 'Your message will not be sent or stored while delivery is unavailable.' ?></p>
+                    <button type="submit" class="button button-primary form-submit" aria-describedby="delivery-note"><span>Check Message</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
+                    <p class="form-privacy">Nothing is sent or stored by this site. You send the message from your email app.</p>
+                    <noscript><p class="form-note">JavaScript is off. Submitting this form opens your email app; you can also use the direct email link.</p></noscript>
                 </form>
             </div>
         </section>
@@ -380,8 +189,8 @@ if (isset($_SESSION['contact_success'])) {
 
     <footer class="footer">
         <div class="container">
-            <div class="footer-main"><div class="footer-brand"><a href="#home" class="logo" aria-label="Back to <?= e($profile['name']) ?>’s introduction"><?= e($profile['initials']) ?><span>.</span></a><span class="footer-tagline">Design, data &amp; a world of possibility.</span></div><nav class="footer-links" aria-label="Footer navigation"><a href="#about">About</a><a href="#skills">Skills</a><a href="#contact">Contact</a><a href="#home" class="to-top">Back to top <?= icon('up') ?></a></nav></div>
-            <div class="footer-bottom"><span>&copy; <?= e($currentYear) ?> <?= e($profile['name']) ?>. All rights reserved.</span><span><i class="dot" aria-hidden="true"></i> A little curiosity goes a long way.</span></div>
+            <div class="footer-main"><div class="footer-brand"><a href="#home" class="logo" aria-label="Back to Kimberly Duero’s introduction">KD<span>.</span></a><span class="footer-tagline">Design, data &amp; a world of possibility.</span></div><nav class="footer-links" aria-label="Footer navigation"><a href="#about">About</a><a href="#skills">Skills</a><a href="#contact">Contact</a><a href="#home" class="to-top">Back to top <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></nav></div>
+            <div class="footer-bottom"><span>&copy; <span id="copyright-year">2026</span> Kimberly Duero. All rights reserved.</span><span><i class="dot" aria-hidden="true"></i> A little curiosity goes a long way.</span></div>
         </div>
     </footer>
 
@@ -464,27 +273,106 @@ if (isset($_SESSION['contact_success'])) {
                 }, 250);
             }, 4500);
 
+            // Static hosting has no mail server. Validate locally and offer an
+            // email draft; never claim delivery or submit data to the host.
+            document.querySelector('#copyright-year').textContent = new Date().getFullYear();
             const form = document.querySelector('#contact-form');
             const submit = form.querySelector('[type="submit"]');
             const submitLabel = submit.querySelector('span');
             const originalLabel = submitLabel.textContent;
-            form.addEventListener('submit', () => {
-                form.classList.add('submitting');
-                form.setAttribute('aria-busy', 'true');
-                submit.disabled = true;
-                submitLabel.textContent = 'Please wait…';
-            });
-            window.addEventListener('pageshow', () => {
+            const fieldNames = ['name', 'email', 'subject', 'message'];
+            const status = document.createElement('div');
+            status.className = 'form-status';
+            status.id = 'form-status';
+            status.setAttribute('role', 'status');
+            status.setAttribute('tabindex', '-1');
+            status.hidden = true;
+            form.querySelector('.form-grid').before(status);
+
+            const clearError = field => {
+                field.removeAttribute('aria-invalid');
+                field.removeAttribute('aria-describedby');
+                document.getElementById('error-' + field.name)?.remove();
+            };
+            const showError = (field, message) => {
+                const error = document.createElement('span');
+                error.className = 'field-error';
+                error.id = 'error-' + field.name;
+                error.textContent = message;
+                field.setAttribute('aria-invalid', 'true');
+                field.setAttribute('aria-describedby', error.id);
+                field.after(error);
+            };
+            const showStatus = message => {
+                status.replaceChildren(document.createTextNode(message));
+                status.hidden = false;
+                form.classList.add('is-visible');
+            };
+            const resetSubmit = () => {
                 form.classList.remove('submitting');
                 form.removeAttribute('aria-busy');
                 submit.disabled = false;
                 submitLabel.textContent = originalLabel;
+            };
+            fieldNames.forEach(name => {
+                form.elements.namedItem(name).addEventListener('input', event => {
+                    clearError(event.target);
+                    status.hidden = true;
+                    status.replaceChildren();
+                });
             });
-            const status = document.querySelector('#form-status');
-            if (status) {
-                form.classList.add('is-visible');
-                status.focus({ preventScroll: true });
-            }
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                const values = {};
+                let firstInvalid = null;
+                fieldNames.forEach(name => {
+                    const field = form.elements.namedItem(name);
+                    clearError(field);
+                    values[name] = field.value.trim();
+                    const length = Array.from(values[name]).length;
+                    let message = '';
+                    if (name === 'name' && (length < 2 || length > 100 || /[\r\n]/.test(values[name]))) {
+                        message = 'Enter a name between 2 and 100 characters.';
+                    } else if (name === 'email' && (!values[name] || length > 254 || field.validity.typeMismatch || /[\r\n]/.test(values[name]))) {
+                        message = 'Enter a valid email address.';
+                    } else if (name === 'subject' && (length < 2 || length > 150 || /[\r\n]/.test(values[name]))) {
+                        message = 'Enter a subject between 2 and 150 characters.';
+                    } else if (name === 'message' && (length < 10 || length > 5000)) {
+                        message = 'Enter a message between 10 and 5,000 characters.';
+                    }
+                    if (message) {
+                        showError(field, message);
+                        firstInvalid ||= field;
+                    }
+                });
+                if (firstInvalid) {
+                    showStatus('Please check the highlighted fields and try again.');
+                    firstInvalid.focus();
+                    return;
+                }
+                form.classList.add('submitting');
+                form.setAttribute('aria-busy', 'true');
+                submit.disabled = true;
+                submitLabel.textContent = 'Please wait?';
+                window.setTimeout(() => {
+                    try {
+                        const recipient = form.getAttribute('action');
+                        const body = 'Name: ' + values.name + '\r\nEmail: ' + values.email + '\r\n\r\n' + values.message;
+                        const draft = document.createElement('a');
+                        draft.className = 'text-link';
+                        draft.textContent = 'Open email draft';
+                        draft.href = recipient + '?subject=' + encodeURIComponent(values.subject) + '&body=' + encodeURIComponent(body);
+                        showStatus('Your message is ready. It has not been sent. Open the draft and send it from your email app. ');
+                        status.append(draft);
+                        status.focus({ preventScroll: true });
+                    } catch {
+                        showStatus('The email draft could not be prepared. Please use the direct email link instead.');
+                    } finally {
+                        resetSubmit();
+                    }
+                }, 150);
+            });
+            window.addEventListener('pageshow', resetSubmit);
         })();
     </script>
 </body>
