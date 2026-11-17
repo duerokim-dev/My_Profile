@@ -69,14 +69,23 @@ try {
             'Missing portfolio section: ' . $section);
     }
     requireBuild($xpath->query('//h1[@id="hero-title"]')->length === 1, 'Missing profile heading.');
-    foreach (['theme-toggle', 'menu-toggle'] as $class) {
-        requireBuild($xpath->query('//button[contains(concat(" ", normalize-space(@class), " "), " ' . $class . ' ")]')->length === 1,
-            'Missing interactive control: ' . $class);
+    requireBuild($xpath->query('//script')->length === 0, 'JavaScript is not allowed in this portfolio.');
+    foreach ($xpath->query('//*[@*]') as $element) {
+        foreach ($element->attributes as $attribute) {
+            requireBuild(!str_starts_with(strtolower($attribute->name), 'on'),
+                'Inline event handlers are not allowed: ' . $attribute->name);
+        }
     }
-    foreach ($xpath->query('//*[@data-roles]') as $element) {
-        $roles = json_decode($element->getAttribute('data-roles'), true, flags: JSON_THROW_ON_ERROR);
-        requireBuild(is_array($roles) && count($roles) > 0, 'Role animation needs at least one role.');
+    foreach ([
+        'theme switch' => '//input[@id="theme-toggle" and @type="checkbox"]',
+        'theme label' => '//label[@for="theme-toggle"]',
+        'mobile menu button' => '//button[@popovertarget="mobile-nav"]',
+        'mobile menu' => '//nav[@id="mobile-nav" and @popover="auto"]',
+    ] as $control => $query) {
+        requireBuild($xpath->query($query)->length === 1, 'Missing native control: ' . $control);
     }
+    requireBuild($xpath->query('//span[contains(concat(" ", normalize-space(@class), " "), " role-text ")]')->length > 0,
+        'CSS role animation needs at least one professional title.');
     foreach ($xpath->query('//*[@href or @src or @action]') as $element) {
         foreach (['href', 'src', 'action'] as $attribute) {
             if (!$element->hasAttribute($attribute)) {
@@ -84,6 +93,7 @@ try {
             }
             $url = $element->getAttribute($attribute);
             requireBuild($url !== '' && !str_starts_with($url, '/'), 'Use a relative asset/link: ' . $url);
+            requireBuild(!preg_match('/^\s*(?:javascript|vbscript):/i', $url), 'Script URLs are not allowed.');
             if (str_starts_with($url, '#')) {
                 requireBuild(isset($ids[substr($url, 1)]), 'Missing anchor target: ' . $url);
             } elseif (!preg_match('/^[a-z][a-z\d+.-]*:/i', $url)) {

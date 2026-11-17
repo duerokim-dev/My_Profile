@@ -3,7 +3,8 @@
 The existing portfolio is developed in **PHP** and deployed as a static website
 at <https://duerokim-dev.github.io/My_Profile/>. Its design, dark/light themes,
 SVG icons, responsive breakpoints, animations, and contact form are preserved.
-There are no frontend frameworks, Composer packages, or production PHP server.
+The page contains only HTML and embedded CSS rendered by PHP. There is no
+JavaScript, frontend framework, Composer package, or production PHP server.
 
 **Edit `index.php` → commit → push to `main` → GitHub Actions renders PHP →
 validated static HTML deploys to GitHub Pages.**
@@ -12,15 +13,13 @@ validated static HTML deploys to GitHub Pages.**
 
 ```text
 My_Profile/
-├── index.php                      # Primary source: data, HTML, CSS, JavaScript
+├── index.php                      # Primary source: PHP data, HTML, embedded CSS
 ├── index.html                     # Generated local preview; ignored by Git
 ├── profile.jpg                    # Original portrait
 ├── .nojekyll                      # Static hosting compatibility marker
 ├── .gitignore
 ├── .github/workflows/deploy.yml    # Automatic build and Pages deployment
 ├── scripts/build.php              # PHP CLI renderer and output validation
-├── tests/check_static.py           # Dependency-free build/regression checks
-├── tests/frontend-baseline.json    # Original CSS/JS/photo fingerprints
 └── dist/                          # Generated deployment files; ignored by Git
     ├── index.html
     ├── profile.jpg
@@ -45,20 +44,20 @@ Change the PHP arrays at the beginning of `index.php`:
 
 Values render through `e()`, which escapes text and HTML attribute values with
 UTF-8 and quote protection. The SVG map contains only trusted, fixed markup.
-The copyright year is rendered by PHP using `Asia/Manila`; the original browser
-JavaScript continues updating it when the page is viewed in a later year.
+The copyright year is rendered by PHP using `Asia/Manila` and updates whenever
+the static site is rebuilt.
 
-Keep the embedded CSS, JavaScript, class names, `data-*` attributes, section IDs,
+Keep the embedded CSS, class names, section IDs,
 and SVG definitions intact when editing content. All links to local assets must
 remain relative, such as `profile.jpg`, so they work beneath `/My_Profile/`.
 When introducing a new static asset, add it to the build script's asset allowlist
-and update the corresponding asset check in `tests/check_static.py`.
+so the asset is packaged and its relative URL passes validation.
 
 ## Local PHP preview
 
 Use PHP 8.5 CLI with the DOM extension. The workflow installs this runtime;
-local development requires PHP on your PATH. Python 3 and Node.js are used only
-for checks, and are already available on GitHub's Ubuntu runner.
+local development requires PHP on your PATH. No JavaScript runtime, Python,
+package manager, or frontend build tool is required.
 
 ```sh
 php -l index.php
@@ -73,7 +72,6 @@ To generate and check the exact static version:
 
 ```sh
 php scripts/build.php
-python tests/check_static.py --php php
 php -S 127.0.0.1:8001 -t dist
 ```
 
@@ -88,7 +86,7 @@ server during the GitHub Actions build. Never edit generated HTML directly.
 The repository must use **GitHub Actions** as its publishing source, rather
 than **Deploy from a branch**. This is a one-time repository setting:
 
-1. Push the PHP source, build tools, tests, and workflow to `main`.
+1. Push the PHP source, build tool, assets, and workflow to `main`.
 2. Open [Settings → Pages](https://github.com/duerokim-dev/My_Profile/settings/pages).
 3. Under **Build and deployment → Source**, select **GitHub Actions**.
 4. If the first run occurred before this setting changed, use **Run workflow**
@@ -99,7 +97,7 @@ The workflow runs on pushes to `main` and on manual dispatch. It:
 
 1. Checks out source with `actions/checkout` without persisting credentials.
 2. Sets up supported PHP 8.5 using `shivammathur/setup-php`.
-3. Lints the PHP files, executes the build, and runs regression checks.
+3. Lints the PHP files, renders the page, and validates the output.
 4. Configures Pages with `actions/configure-pages`.
 5. Uploads only `dist/` using `actions/upload-pages-artifact`.
 6. Deploys with `actions/deploy-pages` in the `github-pages` environment.
@@ -110,7 +108,7 @@ is required by the workflow. Deployment concurrency avoids interrupting an
 in-progress Pages deployment. A failed build cannot reach the deployment job.
 
 The output folder is an explicit allowlist, never a copy of the checkout.
-`index.php`, build tools, tests, README, `.git`, and unrelated local files are
+`index.php`, build tools, README, `.git`, and unrelated local files are
 excluded. The `.nojekyll` marker is retained for compatibility; the Actions
 artifact is already static and does not go through Jekyll.
 
@@ -120,33 +118,48 @@ and PHP's [supported runtime policy](https://www.php.net/supported-versions.php)
 
 ## Contact form
 
-The existing form validates in JavaScript and prepares an **Open email draft**
-link. The visitor sends the message through their own email application.
-Nothing is submitted to PHP, stored by this website, or POSTed to Pages.
-The form never claims successful delivery. Direct email, phone, Facebook, and
-the no-JavaScript `mailto:` fallback retain their existing behavior.
+The form uses HTML `required`, email type, and length constraints for browser
+validation. **Open Email App** invokes the form's `mailto:` action; the visitor
+reviews and sends the message in their configured email application. Support
+for including form fields in the draft depends on the browser/email client.
+The direct email link remains available. Nothing is submitted to PHP, stored
+by the website, or POSTed to Pages, and the form never claims delivery.
 
 ## Verification
 
-`tests/check_static.py` checks PHP/static byte equivalence, original CSS and JS
-fingerprints, JavaScript syntax when Node is available, section order, HTML
-nesting, ARIA references, original portrait bytes, PHP array/card counts, role
-data, and HTML escaping. It also injects test warnings, missing assets, and
-unexpected deployment files in an isolated temporary folder to verify failures.
-The build itself rejects empty output, unprocessed PHP, duplicate IDs, missing
-sections/controls, invalid role data, broken anchors, unpackaged local paths,
-and missing static assets.
+The PHP build rejects empty output, unprocessed PHP, script elements, inline
+event handlers, script URLs, duplicate IDs, missing sections/native controls,
+missing professional titles, broken anchors, unpackaged paths, and missing
+assets. PHP warnings stop the build before partial rendered output is written.
+Only allowlisted static files can be published.
 
-The initial migration also compares the generated DOM, all attributes, SVGs,
-and visible text against the pre-conversion page after formatting whitespace
-normalization. Its CSS and JavaScript remain byte-for-byte identical, preserving
-theme initialization, localStorage, Intersection Observer, animation timing,
-reduced-motion support, and mobile interactions. Content edits do not require
-updating frontend fingerprints. If a later intentional design, JavaScript, or
-photo change is requested, review and update the relevant baseline hashes.
+## HTML/CSS-only interactions
 
-The automated checks do not take browser screenshots or inspect a live browser
-console. For visual QA, compare PHP and static previews at 375, 768, 1024, and
-1440 pixels in both themes; exercise theme persistence, navigation, reveals,
-mobile menu, and contact validation. Repository settings and a successful live
-Actions run must be verified separately from local build results.
+- The existing palettes, layout, typography, portrait, SVGs, cards, responsive
+  breakpoints, smooth anchor scrolling, and hover transitions are retained.
+- The theme control is a keyboard-accessible checkbox styled with the existing
+  sun/moon icons. CSS `light-dark()` and `:has()` follow the system theme and
+  let visitors switch to its opposite. The choice is not saved across visits;
+  there is no localStorage code. Older browsers fall back to the dark palette.
+- The mobile menu uses the browser's native Popover API through HTML attributes,
+  with CSS transitions. Toggle it with the menu button; Escape or a click outside
+  dismisses it. After selecting a section, close the menu with the same button
+  or by clicking outside. Older browsers show the links inline.
+- Professional titles rotate with CSS keyframes, keeping both titles available
+  to assistive technology. Hover pauses the rotation. Reduced motion shows the
+  first title without animation.
+- Fade-up, side entrance, staggered card, portrait, and timeline reveals use
+  CSS animations. Supporting browsers tie them to scroll position with view
+  timelines; otherwise entrance animations run at page load and content stays
+  visible. Scroll-driven effects can reverse when scrolling back up.
+- Named section timelines highlight navigation while scrolling where supported;
+  other browsers highlight the selected URL fragment. Reduced motion disables
+  movement, including smooth scrolling.
+
+The CSS enhancements follow the documented
+[view-timeline animation model](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation-timeline),
+[light-dark theme selection](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/light-dark),
+and [HTML popover behavior](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover).
+Browser screenshots are a separate visual check: inspect PHP and static previews
+at 375, 768, 1024, and 1440 pixels in both themes. Verify the local build and a
+successful live Actions run independently.

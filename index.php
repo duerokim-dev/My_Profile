@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-// Edit portfolio content here. CSS, markup hooks, and JavaScript below are the
-// existing portfolio implementation, shared by PHP preview and static builds.
+// Edit portfolio content here. The HTML and embedded CSS below are the
+// portfolio implementation, shared by PHP preview and static builds.
 date_default_timezone_set('Asia/Manila');
 
 function e(string $value): string
@@ -299,7 +299,9 @@ function portfolioIcon(string $name): string
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#080B12" />
+    <meta name="theme-color" content="#080B12" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'none'; object-src 'none'; base-uri 'self'" />
     <meta
       name="description"
       content="<?= e($profile['description']) ?>"
@@ -309,20 +311,7 @@ function portfolioIcon(string $name): string
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23080B12'/%3E%3Ctext x='32' y='41' font-family='Arial' font-size='27' font-weight='bold' text-anchor='middle' fill='%2300D4FF'%3EKD%3C/text%3E%3C/svg%3E"
     />
-    <script>
-      (() => {
-        let theme = "dark";
-        let saved;
-        try { saved = localStorage.getItem("portfolio-theme"); } catch {}
-        if (saved === "light" || saved === "dark") theme = saved;
-        else if (window.matchMedia?.("(prefers-color-scheme: light)").matches)
-          theme = "light";
-        document.documentElement.dataset.theme = theme;
-        document.querySelector('meta[name="theme-color"]').content =
-          theme === "light" ? "#F8FAFC" : "#080B12";
-      })();
-    </script>
-    <style>
+<style>
       /* FOUNDATION */
       /* Theme colors live here; components use semantic custom properties. */
       :root {
@@ -369,44 +358,52 @@ function portfolioIcon(string $name): string
         --width: 1180px;
         --ease: cubic-bezier(0.22, 1, 0.36, 1);
       }
-      :root[data-theme="light"] {
-        color-scheme: light;
-        --bg: #F8FAFC;
-        --bg-alt: #EEF2F7;
-        --card: #FFFFFF;
-        --cyan: #0891B2;
-        --blue: #2563EB;
-        --text: #0F172A;
-        --muted: #475569;
-        --soft-text: #334155;
-        --subtle-text: #526278;
-        --border: #E2E8F0;
-        --border-hover: #94ADC6;
-        --accent-text: #0E7490;
-        --accent-border: #B8D8E4;
-        --accent-surface: #0891B20A;
-        --accent-hover: #0891B214;
-        --primary-bg: #2563EB;
-        --primary-hover: #1D4ED8;
-        --primary-text: #FFFFFF;
-        --surface-hover: #E7EDF5;
-        --input-bg: #F8FAFC;
-        --header-bg: #F8FAFCEF;
-        --menu-bg: #FFFFFFFA;
-        --note-bg: #FFFFFFF5;
-        --ambient: #0891B212;
-        --selection: #2563EB26;
-        --shadow: #0F172A12;
-        --portrait-start: #DCEAF5;
-        --error: #B91C1C;
-        --error-border: #DC2626;
-        --notice-text: #854D0E;
-        --notice-border: #D4AE6B;
-        --notice-bg: #FEF9EF;
-        --success-text: #166534;
-        --success-border: #86B99A;
-        --success-bg: #F0FDF4;
+      /* The original palettes, selected entirely by CSS and a native checkbox. */
+      @supports (color: light-dark(white, black)) {
+        :root {
+          --bg: light-dark(#F8FAFC, #080B12);
+          --bg-alt: light-dark(#EEF2F7, #101827);
+          --card: light-dark(#FFFFFF, #151E2D);
+          --cyan: light-dark(#0891B2, #00D4FF);
+          --blue: light-dark(#2563EB, #2563EB);
+          --text: light-dark(#0F172A, #F1F5F9);
+          --muted: light-dark(#475569, #94A3B8);
+          --soft-text: light-dark(#334155, #C6D2E2);
+          --subtle-text: light-dark(#526278, #94A3B8);
+          --border: light-dark(#E2E8F0, #263449);
+          --border-hover: light-dark(#94ADC6, #476681);
+          --accent-text: light-dark(#0E7490, #A9EAFA);
+          --accent-border: light-dark(#B8D8E4, #345267);
+          --accent-surface: light-dark(#0891B20A, #00D4FF0A);
+          --accent-hover: light-dark(#0891B214, #00D4FF18);
+          --primary-bg: light-dark(#2563EB, #00D4FF);
+          --primary-hover: light-dark(#1D4ED8, #6EE7FF);
+          --primary-text: light-dark(#FFFFFF, #04141C);
+          --surface-hover: light-dark(#E7EDF5, #1B293C);
+          --input-bg: light-dark(#F8FAFC, #0C1420);
+          --header-bg: light-dark(#F8FAFCEF, #080B12EF);
+          --menu-bg: light-dark(#FFFFFFFA, #101827FA);
+          --note-bg: light-dark(#FFFFFFF5, #151E2DF5);
+          --ambient: light-dark(#0891B212, #132D4B40);
+          --selection: light-dark(#2563EB26, #00D4FF45);
+          --shadow: light-dark(#0F172A12, #00000026);
+          --portrait-start: light-dark(#DCEAF5, #193653);
+          --error: light-dark(#B91C1C, #FFC2C2);
+          --error-border: light-dark(#DC2626, #F99797);
+          --notice-text: light-dark(#854D0E, #FFE0CE);
+          --notice-border: light-dark(#D4AE6B, #886453);
+          --notice-bg: light-dark(#FEF9EF, #A9712410);
+          --success-text: light-dark(#166534, #B9F1D3);
+          --success-border: light-dark(#86B99A, #397862);
+          --success-bg: light-dark(#F0FDF4, #2D886912);
+        }
+        :root:has(#theme-toggle:checked) { color-scheme: light; }
+        @media (prefers-color-scheme: light) {
+          :root { color-scheme: light; }
+          :root:has(#theme-toggle:checked) { color-scheme: dark; }
+        }
       }
+
       *,
       *::before,
       *::after {
@@ -633,8 +630,7 @@ function portfolioIcon(string $name): string
           border-color 0.3s;
         isolation: isolate;
       }
-      .header.scrolled,
-      .header.menu-open {
+      .header {
         background: var(--header-bg);
         border-color: var(--border);
         backdrop-filter: blur(18px);
@@ -695,11 +691,11 @@ function portfolioIcon(string $name): string
         transition: transform 0.25s;
       }
       .nav a:hover,
-      .nav a.active {
+      .nav a:focus-visible {
         color: var(--text);
       }
       .nav a:hover::after,
-      .nav a.active::after {
+      .nav a:focus-visible::after {
         transform: scaleX(1);
       }
       .header-cta {
@@ -780,16 +776,13 @@ function portfolioIcon(string $name): string
         min-height: 34px;
         color: var(--soft-text);
       }
-      .role-text {
-        display: inline-block;
-        transition:
-          opacity 0.25s,
-          transform 0.25s;
+      .role-rotator {
+        display: inline-grid;
+        max-width: calc(100% - 12px);
+        vertical-align: top;
       }
-      .role-text.changing {
-        opacity: 0;
-        transform: translateY(5px);
-      }
+      .role-text { grid-area: 1 / 1; }
+      .role-text:not(:first-child) { opacity: 0; }
       .role-cursor {
         color: var(--cyan);
         font-weight: 300;
@@ -1494,10 +1487,6 @@ function portfolioIcon(string $name): string
       textarea[aria-invalid="true"] {
         border-color: var(--error-border);
       }
-      .field-error {
-        font-size: 10px;
-        color: var(--error);
-      }
       .form-submit {
         width: 100%;
         margin-top: 20px;
@@ -1510,32 +1499,6 @@ function portfolioIcon(string $name): string
         line-height: 1.7;
         margin-top: 12px;
         color: var(--subtle-text);
-      }
-      .form-status {
-        font-size: 12px;
-        padding: 13px 15px;
-        border: 1px solid var(--notice-border);
-        border-radius: 7px;
-        color: var(--notice-text);
-        background: var(--notice-bg);
-        margin-bottom: 20px;
-        scroll-margin-top: 115px;
-      }
-      .form-status.success {
-        border-color: var(--success-border);
-        color: var(--success-text);
-        background: var(--success-bg);
-      }
-      .hp-field {
-        position: absolute;
-        left: -10000px;
-        top: auto;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-      }
-      .contact-form.submitting .form-submit .icon {
-        animation: send-pulse 1s ease-in-out infinite;
       }
       /* FOOTER & MOTION */
       .footer {
@@ -1600,7 +1563,8 @@ function portfolioIcon(string $name): string
         border-radius: 50%;
         background: var(--cyan);
       }
-      /* Only observed, offscreen elements are hidden. No JS means visible content. */
+      /* CSS reveal motion uses independent translate/scale properties so that
+         the existing hover transforms continue working after an entrance. */
       .reveal {
         --reveal-x: 0px;
         --reveal-y: 22px;
@@ -1609,26 +1573,14 @@ function portfolioIcon(string $name): string
       .reveal.from-left { --reveal-x: -24px; --reveal-y: 0px; }
       .reveal.from-right { --reveal-x: 24px; --reveal-y: 0px; }
       .reveal.image-reveal { --reveal-y: 12px; --reveal-scale: 0.975; }
-      .reveal.reveal-pending:not(.is-visible) {
-        opacity: 0;
-        transform: translate(var(--reveal-x), var(--reveal-y)) scale(var(--reveal-scale));
-      }
-      .reveal.reveal-entering {
-        transition: opacity 650ms var(--ease), transform 650ms var(--ease);
-        transition-delay: var(--reveal-delay, 0ms);
-      }
-      .reveal.is-visible { opacity: 1; }
-      .education-card.reveal-pending::before { transform: scale(0); }
       .education-card::before { transition: transform 600ms var(--ease); }
+      @keyframes reveal-in {
+        from { opacity: 0; translate: var(--reveal-x) var(--reveal-y); scale: var(--reveal-scale); }
+        to { opacity: 1; translate: 0 0; scale: 1; }
+      }
       @keyframes blink {
         50% {
           opacity: 0;
-        }
-      }
-      @keyframes send-pulse {
-        50% {
-          transform: translate(3px, -3px);
-          opacity: 0.6;
         }
       }
       /* RESPONSIVE */
@@ -1841,7 +1793,7 @@ function portfolioIcon(string $name): string
             transform 0.22s,
             visibility 0.22s;
         }
-        .nav.open {
+        .mobile-nav:popover-open {
           visibility: visible;
           opacity: 1;
           transform: none;
@@ -2157,10 +2109,6 @@ function portfolioIcon(string $name): string
           animation: none !important;
           transition: none !important;
         }
-        .reveal.reveal-pending:not(.is-visible) {
-          opacity: 1;
-          transform: none;
-        }
         .role-cursor {
           display: none;
         }
@@ -2190,13 +2138,19 @@ function portfolioIcon(string $name): string
         color: var(--soft-text);
       }
       .icon-button:hover { color: var(--cyan); border-color: var(--border-hover); }
-      .theme-toggle[hidden] { display: none; }
+      .theme-toggle { cursor: pointer; }
       .theme-toggle .moon-icon { display: none; }
-      [data-theme="light"] .theme-toggle .sun-icon { display: none; }
-      [data-theme="light"] .theme-toggle .moon-icon { display: block; }
+      :root:has(#theme-toggle:checked) .theme-toggle .sun-icon { display: none; }
+      :root:has(#theme-toggle:checked) .theme-toggle .moon-icon { display: block; }
+      @media (prefers-color-scheme: light) {
+        .theme-toggle .sun-icon { display: none; }
+        .theme-toggle .moon-icon { display: block; }
+        :root:has(#theme-toggle:checked) .theme-toggle .sun-icon { display: block; }
+        :root:has(#theme-toggle:checked) .theme-toggle .moon-icon { display: none; }
+      }
       .menu-toggle .close-icon { display: none; }
-      .menu-toggle[aria-expanded="true"] .menu-icon { display: none; }
-      .menu-toggle[aria-expanded="true"] .close-icon { display: block; }
+      .header:has(.mobile-nav:popover-open) .menu-toggle .menu-icon { display: none; }
+      .header:has(.mobile-nav:popover-open) .menu-toggle .close-icon { display: block; }
       .button:active, .icon-button:active { transform: translateY(1px); }
       .button:disabled { opacity: 0.65; transform: none; box-shadow: none; }
       .button .icon { transition: transform 250ms var(--ease); }
@@ -2223,7 +2177,7 @@ function portfolioIcon(string $name): string
       .icon-box { transition: color 250ms ease; }
       .eyebrow, .text-link:hover, .contact-item a:hover,
       .social-links a:hover, .footer-links a:hover { color: var(--accent-text); }
-      .image-reveal.is-visible .portrait-frame {
+      .image-reveal .portrait-frame {
         animation: portrait-reveal 700ms var(--ease) both;
       }
       @keyframes portrait-reveal {
@@ -2244,7 +2198,6 @@ function portfolioIcon(string $name): string
       input, textarea { font-size: 1rem; }
       .contact-item small { font-size: 0.6875rem; }
       .contact-item a, .contact-item .contact-value { font-size: 0.875rem; }
-      .form-status .text-link { text-decoration: underline; text-underline-offset: 3px; }
       .hero-grid > *, .about-grid > *, .contact-grid > *, .education-grid > * { min-width: 0; }
       .role-line { min-height: 2.8em; }
       @media (max-width: 1100px) {
@@ -2272,22 +2225,135 @@ function portfolioIcon(string $name): string
         .hero h1 { font-size: clamp(2.8rem, 14vw, 3.5rem); }
       }
       @media (prefers-reduced-motion: reduce) {
-        .reveal.reveal-pending:not(.is-visible) { opacity: 1; transform: none; }
-        .education-card.reveal-pending::before { transform: none; }
+        .reveal { opacity: 1; translate: none; scale: none; }
+      }
+      /* HTML/CSS-only controls and progressive animation enhancements. */
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+      .theme-control { display: inline-flex; position: relative; }
+      .theme-input:focus-visible + .theme-toggle {
+        outline: 2px solid var(--cyan);
+        outline-offset: 5px;
+      }
+      .mobile-nav { display: none; }
+      input:not(.theme-input):user-invalid, textarea:user-invalid { border-color: var(--error-border); }
+      @supports not (color: light-dark(white, black)) {
+        .theme-control { display: none; }
+      }
+      @media (max-width: 700px) {
+        .desktop-nav { display: none; }
+        .mobile-nav {
+          position: fixed;
+          inset: 71px 0 auto;
+          margin: 0;
+          width: 100%;
+          height: auto;
+          color: var(--text);
+          border: 0;
+          border-bottom: 1px solid var(--border);
+        }
+        .mobile-nav:popover-open {
+          display: flex;
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+          animation: menu-enter 220ms var(--ease);
+        }
+        @starting-style {
+          .mobile-nav:popover-open { opacity: 0; transform: translateY(-8px); }
+        }
+      }
+      @media (min-width: 701px) {
+        .mobile-nav:popover-open { display: none; }
+      }
+      @supports not selector(:popover-open) {
+        @media (max-width: 700px) {
+          .menu-toggle { display: none; }
+          .header { position: static; }
+          .mobile-nav { display: flex; position: static; flex-direction: row;
+            flex-wrap: wrap; visibility: visible; opacity: 1; transform: none; }
+        }
+      }
+      @keyframes menu-enter {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: none; }
+      }
+      @keyframes role-cycle {
+        0% { opacity: 0; translate: 0 5px; }
+        3%, <?= e(number_format(max(3, 100 / max(1, count($profile['roles'])) - 3), 3, '.', '')) ?>% { opacity: 1; translate: 0 0; }
+        <?= e(number_format(100 / max(1, count($profile['roles'])), 3, '.', '')) ?>%, 100% { opacity: 0; translate: 0 -5px; }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .reveal:not(.image-reveal) {
+          animation: reveal-in 650ms var(--ease) both;
+          animation-delay: var(--entry-delay, 0ms);
+        }
+        .strength-grid > :nth-child(2), .skills-grid > :nth-child(2), .interests-grid > :nth-child(2) {
+          --entry-delay: 90ms;
+          --reveal-start: 6%;
+        }
+        .strength-grid > :nth-child(3) { --entry-delay: 180ms; --reveal-start: 12%; }
+        .role-text {
+          opacity: 0;
+          animation: role-cycle calc(var(--role-count) * 4.5s) ease-in-out infinite;
+          animation-delay: calc(var(--role-index) * 4.5s);
+        }
+        .role-text:only-child { opacity: 1; animation: none; }
+        .role-rotator:hover .role-text { animation-play-state: paused; }
+        @supports (animation-timeline: view()) and (animation-range: entry 0% entry 45%) {
+          .reveal:not(.hero-copy):not(.image-reveal) {
+            animation-duration: 1ms;
+            animation-delay: 0s;
+            animation-timeline: view();
+            animation-range: entry var(--reveal-start, 0%) entry 45%;
+          }
+          /* A focused form/link is always fully visible during keyboard use. */
+          .reveal:focus-within { animation: none !important; opacity: 1; translate: none; scale: none; }
+          @media (max-width: 700px) {
+            .image-reveal .portrait-frame {
+              animation-duration: 1ms;
+              animation-timeline: view();
+              animation-range: entry 0% entry 45%;
+            }
+          }
+        }
+      }
+      /* Active navigation follows the viewport where named timelines exist. */
+      @supports (animation-timeline: view()) and (timeline-scope: --section-home) {
+        body { timeline-scope: <?php echo implode(', ', array_map(static fn (array $item): string => '--section-' . $item['id'], $navigation)); ?>; }
+        main section[id] { view-timeline-axis: block; view-timeline-inset: 30% 69%; }
+        <?php foreach ($navigation as $link): ?>
+        #<?= e($link['id']) ?> { view-timeline-name: --section-<?= e($link['id']) ?>; }
+        .nav a[href="#<?= e($link['id']) ?>"] { --nav-timeline: --section-<?= e($link['id']) ?>; }
+        <?php endforeach; ?>
+        .nav a::after {
+          animation: nav-current 1ms linear;
+          animation-timeline: var(--nav-timeline);
+          animation-range: contain 0% contain 100%;
+        }
+      }
+      @supports not ((animation-timeline: view()) and (timeline-scope: --section-home)) {
+        <?php foreach ($navigation as $link): ?>
+        body:has(#<?= e($link['id']) ?>:target) .nav a[href="#<?= e($link['id']) ?>"]::after { transform: scaleX(1); }
+        <?php endforeach; ?>
+      }
+      @keyframes nav-current { from, to { transform: scaleX(1); } }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal, .image-reveal .portrait-frame { opacity: 1; translate: none; scale: none; transform: none; }
+        .role-text { opacity: 1; }
+        .role-text:not(:first-child) { display: none; }
       }
     </style>
-    <noscript><style>
-      .menu-toggle { display: none; }
-      @media (max-width: 700px) {
-        .header { position: static; }
-        .header-inner { height: auto; min-height: 72px; flex-wrap: wrap; padding-block: 14px; }
-        .header-actions { order: 1; }
-        .brand { order: 0; }
-        .nav { order: 2; position: static; flex-direction: row; flex-wrap: wrap;
-          width: 100%; padding: 0; visibility: visible; opacity: 1; transform: none; box-shadow: none; }
-      }
-    </style></noscript>
-  </head>
+</head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="header" id="header">
@@ -2296,15 +2362,18 @@ function portfolioIcon(string $name): string
           <span class="logo">KD<span>.</span></span>
           <span class="brand-caption">A personal<br />perspective</span>
         </a>
-        <nav class="nav" id="primary-nav" aria-label="Main navigation">
+        <nav class="nav desktop-nav" id="primary-nav" aria-label="Main navigation">
           <?php foreach ($navigation as $link): ?>
-          <a href="#<?= e($link['id']) ?>"<?php if ($link['id'] === 'home'): ?> class="active" aria-current="location"<?php endif; ?>><?= e($link['label']) ?></a>
+          <a href="#<?= e($link['id']) ?>"><?= e($link['label']) ?></a>
           <?php endforeach; ?>
         </nav>
         <div class="header-actions">
-          <button class="icon-button theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme" hidden>
-            <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg><svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 13A9 9 0 0 1 11 3.2 9 9 0 1 0 20.8 13Z"/></svg>
-          </button>
+          <span class="theme-control">
+            <input class="visually-hidden theme-input" id="theme-toggle" type="checkbox" aria-label="Switch color theme" />
+            <label class="icon-button theme-toggle" for="theme-toggle" title="Switch color theme">
+              <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg><svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 13A9 9 0 0 1 11 3.2 9 9 0 1 0 20.8 13Z"/></svg>
+            </label>
+          </span>
         <a class="button header-cta" href="#contact"
           >Let’s Connect
           <svg
@@ -2322,14 +2391,18 @@ function portfolioIcon(string $name): string
         <button
           class="menu-toggle"
           type="button"
-          aria-label="Open navigation"
-          aria-expanded="false"
-          aria-controls="primary-nav"
+          aria-label="Toggle navigation"
+          popovertarget="mobile-nav"
         >
           <svg class="icon menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><svg class="icon close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
         </button>
         </div>
       </div>
+      <nav class="nav mobile-nav" id="mobile-nav" popover="auto" aria-label="Mobile navigation">
+        <?php foreach ($navigation as $link): ?>
+        <a href="#<?= e($link['id']) ?>"><?= e($link['label']) ?></a>
+        <?php endforeach; ?>
+      </nav>
     </header>
 
     <main id="main">
@@ -2344,11 +2417,12 @@ function portfolioIcon(string $name): string
             <p class="hero-intro">Hello, I’m</p>
             <h1 id="hero-title"><?= e($profile['first_name']) ?><span><?= e($profile['last_name']) ?>.</span></h1>
             <div class="role-line">
-              <span
-                class="role-text"
-                data-roles="<?= e(json_encode($profile['roles'], JSON_THROW_ON_ERROR)) ?>"
-                ><?= e($profile['roles'][0]) ?></span
-              ><span class="role-cursor" aria-hidden="true">|</span>
+              <span class="visually-hidden"><?= e(implode(' · ', $profile['roles'])) ?></span>
+              <span class="role-rotator" style="--role-count: <?= e((string) count($profile['roles'])) ?>" aria-hidden="true">
+                <?php foreach ($profile['roles'] as $roleIndex => $role): ?>
+                <span class="role-text" style="--role-index: <?= e((string) $roleIndex) ?>"><?= e($role) ?></span>
+                <?php endforeach; ?>
+              </span><span class="role-cursor" aria-hidden="true">|</span>
             </div>
             <p class="hero-description"><?= e($profile['hero_description']) ?></p>
             <div class="hero-actions">
@@ -2749,8 +2823,7 @@ function portfolioIcon(string $name): string
               <h3>Send a little hello.</h3>
             </div>
             <p class="form-note" id="delivery-note">
-              Check your message below, then open a draft in your email app. You
-              can also
+              Complete the fields below to open your email app. You can also
               <a href="mailto:<?= e($profile['email']) ?>">email me directly</a>. All
               fields are required.
             </p>
@@ -2813,7 +2886,7 @@ function portfolioIcon(string $name): string
               class="button button-primary form-submit"
               aria-describedby="delivery-note"
             >
-              <span>Check Message</span
+              <span>Open Email App</span
               ><svg
                 class="icon"
                 viewBox="0 0 24 24"
@@ -2831,13 +2904,7 @@ function portfolioIcon(string $name): string
               Nothing is sent or stored by this site. You send the message from
               your email app.
             </p>
-            <noscript
-              ><p class="form-note">
-                JavaScript is off. Submitting this form opens your email app;
-                you can also use the direct email link.
-              </p></noscript
-            >
-          </form>
+</form>
         </div>
       </section>
     </main>
@@ -2886,317 +2953,5 @@ function portfolioIcon(string $name): string
       </div>
     </footer>
 
-    <script>
-      (() => {
-        "use strict";
-        // Manual choices persist; unselected themes continue following the OS.
-        const themeToggle = document.querySelector(".theme-toggle");
-        const systemTheme = window.matchMedia("(prefers-color-scheme: light)");
-        let hasThemeChoice = false;
-        try {
-          hasThemeChoice = ["dark", "light"].includes(localStorage.getItem("portfolio-theme"));
-        } catch {}
-        const applyTheme = (theme) => {
-          document.documentElement.dataset.theme = theme;
-          document.querySelector('meta[name="theme-color"]').content =
-            theme === "light" ? "#F8FAFC" : "#080B12";
-          const label = `Switch to ${theme === "dark" ? "light" : "dark"} theme`;
-          themeToggle.setAttribute("aria-label", label);
-          themeToggle.title = label;
-        };
-        applyTheme(document.documentElement.dataset.theme || "dark");
-        themeToggle.hidden = false;
-        themeToggle.addEventListener("click", () => {
-          const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-          hasThemeChoice = true;
-          applyTheme(theme);
-          try { localStorage.setItem("portfolio-theme", theme); } catch {}
-        });
-        systemTheme.addEventListener("change", (event) => {
-          if (!hasThemeChoice) applyTheme(event.matches ? "light" : "dark");
-        });
-        window.addEventListener("storage", (event) => {
-          if (event.key !== "portfolio-theme" && event.key !== null) return;
-          hasThemeChoice = event.newValue === "dark" || event.newValue === "light";
-          applyTheme(hasThemeChoice ? event.newValue : systemTheme.matches ? "light" : "dark");
-        });
-
-        const header = document.querySelector(".header");
-        const menu = document.querySelector(".nav");
-        const toggle = document.querySelector(".menu-toggle");
-        const links = [...menu.querySelectorAll("a")];
-        const reducedMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        );
-        const mobileViewport = window.matchMedia("(max-width: 700px)");
-
-        const setMenu = (open, returnFocus = false) => {
-          toggle.setAttribute("aria-expanded", String(open));
-          toggle.setAttribute(
-            "aria-label",
-            open ? "Close navigation" : "Open navigation",
-          );
-          menu.classList.toggle("open", open);
-          header.classList.toggle("menu-open", open);
-          menu.inert = mobileViewport.matches && !open;
-          if (returnFocus) toggle.focus();
-        };
-        toggle.addEventListener("click", () =>
-          setMenu(toggle.getAttribute("aria-expanded") !== "true"),
-        );
-        links.forEach((link) =>
-          link.addEventListener("click", () => setMenu(false)),
-        );
-        document.addEventListener("keydown", (event) => {
-          if (
-            event.key === "Escape" &&
-            toggle.getAttribute("aria-expanded") === "true"
-          )
-            setMenu(false, true);
-        });
-        document.addEventListener("click", (event) => {
-          if (!header.contains(event.target)) setMenu(false);
-        });
-        header
-          .querySelectorAll('a[href="#home"], a[href="#contact"]')
-          .forEach((link) =>
-            link.addEventListener("click", () => setMenu(false)),
-          );
-        mobileViewport.addEventListener("change", () => setMenu(false));
-        setMenu(false);
-
-        const sections = [...document.querySelectorAll("main section[id]")];
-        let scrollQueued = false;
-        const updateScroll = () => {
-          header.classList.toggle("scrolled", window.scrollY > 16);
-          const reference = Math.min(window.innerHeight * 0.35, 250);
-          let current = sections[0].id;
-          sections.forEach((section) => {
-            if (section.getBoundingClientRect().top <= reference)
-              current = section.id;
-          });
-          if (
-            window.innerHeight + window.scrollY >=
-            document.documentElement.scrollHeight - 10
-          )
-            current = "contact";
-          links.forEach((link) => {
-            const active = link.hash === "#" + current;
-            link.classList.toggle("active", active);
-            if (active) link.setAttribute("aria-current", "location");
-            else link.removeAttribute("aria-current");
-          });
-          scrollQueued = false;
-        };
-        window.addEventListener(
-          "scroll",
-          () => {
-            if (!scrollQueued) {
-              scrollQueued = true;
-              requestAnimationFrame(updateScroll);
-            }
-          },
-          { passive: true },
-        );
-        window.addEventListener("resize", updateScroll, { passive: true });
-        updateScroll();
-
-        // Stagger each grid locally. Reveal once; retain normal hover timing afterward.
-        const reveals = [...document.querySelectorAll(".reveal")];
-        document.querySelectorAll(".strength-grid, .skills-grid, .interests-grid, .timeline")
-          .forEach((grid) => {
-            [...grid.children].forEach((card, index) =>
-              card.style.setProperty("--reveal-delay", `${Math.min(index, 3) * 90}ms`),
-            );
-          });
-        let revealObserver;
-        const showAll = () => {
-          revealObserver?.disconnect();
-          reveals.forEach((element) => {
-            element.classList.remove("reveal-pending", "reveal-entering");
-            element.classList.add("is-visible");
-          });
-        };
-        if ("IntersectionObserver" in window && !reducedMotion.matches) {
-          try {
-            revealObserver = new IntersectionObserver((entries) => {
-              entries.forEach(({ target, isIntersecting }) => {
-                if (!isIntersecting) return;
-                target.classList.add("reveal-entering");
-                // The pending transform has already been painted offscreen.
-                requestAnimationFrame(() => target.classList.add("is-visible"));
-                window.setTimeout(() => {
-                  target.classList.remove("reveal-pending", "reveal-entering");
-                }, 1000);
-                revealObserver.unobserve(target);
-              });
-            }, { threshold: 0.08, rootMargin: "0px 0px -24px 0px" });
-            reveals.forEach((element) => {
-              // Above-the-fold content is immediately available, even on slow devices.
-              if (element.getBoundingClientRect().top < window.innerHeight - 24)
-                element.classList.add("is-visible");
-              else {
-                revealObserver.observe(element);
-                element.classList.add("reveal-pending");
-              }
-            });
-          } catch { showAll(); }
-        }
-        reducedMotion.addEventListener("change", (event) => {
-          if (event.matches) showAll();
-        });
-        // Keyboard focus always exposes its containing card before interaction.
-        document.addEventListener("focusin", (event) => {
-          const container = event.target.closest(".reveal");
-          if (container) {
-            container.classList.remove("reveal-pending", "reveal-entering");
-            container.classList.add("is-visible");
-            revealObserver?.unobserve(container);
-          }
-        });
-
-        const role = document.querySelector(".role-text");
-        const roles = JSON.parse(role.dataset.roles);
-        let roleIndex = 0;
-        window.setInterval(() => {
-          if (reducedMotion.matches || document.hidden) return;
-          role.classList.add("changing");
-          window.setTimeout(() => {
-            roleIndex = (roleIndex + 1) % roles.length;
-            role.textContent = roles[roleIndex];
-            role.classList.remove("changing");
-          }, 250);
-        }, 4500);
-
-        // Static hosting has no mail server. Validate locally and offer an
-        // email draft; never claim delivery or submit data to the host.
-        document.querySelector("#copyright-year").textContent =
-          new Date().getFullYear();
-        const form = document.querySelector("#contact-form");
-        const submit = form.querySelector('[type="submit"]');
-        const submitLabel = submit.querySelector("span");
-        const originalLabel = submitLabel.textContent;
-        const fieldNames = ["name", "email", "subject", "message"];
-        const status = document.createElement("div");
-        status.className = "form-status";
-        status.id = "form-status";
-        status.setAttribute("role", "status");
-        status.setAttribute("tabindex", "-1");
-        status.hidden = true;
-        form.querySelector(".form-grid").before(status);
-
-        const clearError = (field) => {
-          field.removeAttribute("aria-invalid");
-          field.removeAttribute("aria-describedby");
-          document.getElementById("error-" + field.name)?.remove();
-        };
-        const showError = (field, message) => {
-          const error = document.createElement("span");
-          error.className = "field-error";
-          error.id = "error-" + field.name;
-          error.textContent = message;
-          field.setAttribute("aria-invalid", "true");
-          field.setAttribute("aria-describedby", error.id);
-          field.after(error);
-        };
-        const showStatus = (message) => {
-          status.replaceChildren(document.createTextNode(message));
-          status.hidden = false;
-          form.classList.add("is-visible");
-        };
-        const resetSubmit = () => {
-          form.classList.remove("submitting");
-          form.removeAttribute("aria-busy");
-          submit.disabled = false;
-          submitLabel.textContent = originalLabel;
-        };
-        fieldNames.forEach((name) => {
-          form.elements.namedItem(name).addEventListener("input", (event) => {
-            clearError(event.target);
-            status.hidden = true;
-            status.replaceChildren();
-          });
-        });
-        form.addEventListener("submit", (event) => {
-          event.preventDefault();
-          const values = {};
-          let firstInvalid = null;
-          fieldNames.forEach((name) => {
-            const field = form.elements.namedItem(name);
-            clearError(field);
-            values[name] = field.value.trim();
-            const length = Array.from(values[name]).length;
-            let message = "";
-            if (
-              name === "name" &&
-              (length < 2 || length > 100 || /[\r\n]/.test(values[name]))
-            ) {
-              message = "Enter a name between 2 and 100 characters.";
-            } else if (
-              name === "email" &&
-              (!values[name] ||
-                length > 254 ||
-                field.validity.typeMismatch ||
-                /[\r\n]/.test(values[name]))
-            ) {
-              message = "Enter a valid email address.";
-            } else if (
-              name === "subject" &&
-              (length < 2 || length > 150 || /[\r\n]/.test(values[name]))
-            ) {
-              message = "Enter a subject between 2 and 150 characters.";
-            } else if (name === "message" && (length < 10 || length > 5000)) {
-              message = "Enter a message between 10 and 5,000 characters.";
-            }
-            if (message) {
-              showError(field, message);
-              firstInvalid ||= field;
-            }
-          });
-          if (firstInvalid) {
-            showStatus("Please check the highlighted fields and try again.");
-            firstInvalid.focus();
-            return;
-          }
-          form.classList.add("submitting");
-          form.setAttribute("aria-busy", "true");
-          submit.disabled = true;
-          submitLabel.textContent = "Preparing draft…";
-          window.setTimeout(() => {
-            try {
-              const recipient = form.getAttribute("action");
-              const body =
-                "Name: " +
-                values.name +
-                "\r\nEmail: " +
-                values.email +
-                "\r\n\r\n" +
-                values.message;
-              const draft = document.createElement("a");
-              draft.className = "text-link";
-              draft.textContent = "Open email draft";
-              draft.href =
-                recipient +
-                "?subject=" +
-                encodeURIComponent(values.subject) +
-                "&body=" +
-                encodeURIComponent(body);
-              showStatus(
-                "Your message is ready. It has not been sent. Open the draft and send it from your email app. ",
-              );
-              status.append(draft);
-              status.focus({ preventScroll: true });
-            } catch {
-              showStatus(
-                "The email draft could not be prepared. Please use the direct email link instead.",
-              );
-            } finally {
-              resetSubmit();
-            }
-          }, 150);
-        });
-        window.addEventListener("pageshow", resetSubmit);
-      })();
-    </script>
-  </body>
+</body>
 </html>
